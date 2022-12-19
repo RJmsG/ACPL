@@ -16,6 +16,12 @@ A few small changes have been added:
 1) Embedded GCC
 2) Default option to download the generated C code
 
+### Goals for ACPL:
+
+1) support for dynamic arrays
+2) full port to the C language
+3) switch to llvm
+4) Support for C & Python based libraries
 
 #### I am currently looking for other's help to make ACPL better
 If you can, join the project and spread the word!
