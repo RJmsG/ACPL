@@ -1,45 +1,43 @@
-from compile import *
-import os, subprocess
-from platform import system
+import acpllib
 
-files_c, file, cls = [], "", 0 #set to 1 for clear screen
-command = ["gcc", "-std=c17", "-Wall"]
+print('ACPL A22\'2 compiler UI 0.1 (acpl 1.3.1)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
 
-lib = ['<stdio.h>', '<stdlib.h>', '<string.h>']
-
-def compilef(file, path='', extra_libs=[], mtype='int', libs=lib, savefile=True, execute=False): # NOTE: execute is a work-in-progress. It does not work as of now.
-  global output
-  libs += extra_libs
-  print(f'Compiling "{file}.acpl"...')
-  f1 = open((file + '.acpl'), 'r')
-  lines = f1.readlines()
-  for i in libs:
-    output.append('#include' + i)
-  output.append(f'{mtype} main() '+'{')
-  output.append('int ac = 1;')
-  for i in lines:
-    a = []
-    for o in range(len(i)):
-      if not o > (len(i) - 2):
-        a.append(i[o])
-    i = ''.join(a)
-    comln(i)
-  if not mtype == 'void':
-    output.append('return 0;')
-  output.append('}')
-  output += aput
-  print('Finished generating code!')
-  print('Creating new file in chosen directory...')
-  if savefile:
-    with open(f'{path}{file}.c', 'x') as f2:
-      for i in output:
-        f2.write("%s\n" % i)
-    f2.close()
-  try:
-        subprocess.run([*command, "-o", file[:-2], file + '.c'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
-  except subprocess.CalledProcessError as suberror:
-        print(suberror.stdout.decode("utf-8"))
-  print('DONE!')
-  if execute:
-     exit_code = subprocess.run(file[:-2]).returncode
-     print(f"\n-----------------------------------\nProcess terminated with exit code {exit_code}") 
+while True:
+    i = input('ACPL>')
+    if i[0] == 'compile':
+        file = i[1]
+        sf = True
+        exec = False
+        mt = 'int'
+        p = ''
+        el = []
+        compile = True
+        if len(i) > 2:
+            del i[0];del i[0]
+            while len(i) > 0:
+                if i[0] == '&savefile':
+                    sf = False
+                    del i[0]
+                elif i[0] == '&execute':
+                    exec = True
+                    del i[0]
+                elif i[0] == '?mtype':
+                    mt = i[1]
+                    del i[0];del i[0]
+                elif i[0] == '?path':
+                    p = i[1]
+                    del i[0];del i[0]
+                elif i[0] == '+lib':
+                    el.append(i[1])
+                    del i[0];del i[0]
+                else:
+                    print('Error: Unidintified or more than requiered args detected!')
+                    compile = False
+        if compile:
+            acpllib.compilef(savefile=sf, execute=exec, file=file, path=p, extra_libs=el, mtype=mt)
+    elif i[0] == 'help':
+        print('Commands: compile, quit')
+    elif i[0] == 'quit':
+        quit()
+    else:
+        print(i[0], 'is not a real usable command. Please refer to \'help\'')
