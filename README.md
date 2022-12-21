@@ -31,7 +31,7 @@ Here's an example:
 ```
 #compilewhatever.py
 import main
-compilef('helloworld.acpl')
+main.compilef('helloworld.acpl')
 ```
 These are all the args and their purposes:
 
