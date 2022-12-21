@@ -1,6 +1,6 @@
 import acpllib
 
-print('ACPL A22\'2 compiler UI 0.1 (acpl 1.3.1)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
+print('ACPL A22\'2 compiler UI 0.1 (acpl 1.2.1)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
 
 while True:
     i = input('ACPL>')
