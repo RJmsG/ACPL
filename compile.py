@@ -27,9 +27,10 @@ def comln(inp):
   global dt
   global tpe
   args = inp.split(' ')
-  if args[0] in dt:
-    tp = args[0]
-    name = args[1]
+  if args[0] == 'vlen':
+    tp = args[1]
+    name = args[2]
+    del args[0]
     del args[0]
     del args[0]
     var.append(name)
@@ -64,6 +65,44 @@ def comln(inp):
         output.append(f'float {name}[] = {strp(" ".join(args))};')
       else:
         output.append(f'float {name}[ac];')
+    args = ['']
+  elif args[0] in dt:
+    tp = args[0]
+    name = args[1]
+    del args[0]
+    del args[0]
+    var.append(name)
+    tpe.append('~' + tp)
+    if tp == 'str':
+      output.append(f'char* {name};')
+      output.append(f'{name} = (char*)malloc(ac * sizeof(char));')
+      output.append(f'if({name}==NULL)' + ' {printf("FAILED TO ALLOCATED MEMORY");} else {int i = 0;')
+      if len(args) > 0:
+        c = 0
+        for i in ' '.join(args):
+          c += 1
+          output.append(f'i++;{name}[i] = \'{i}\';')
+      output.append('}')
+    elif tp == 'int':
+      output.append(f'int* {name};')
+      output.append(f'{name} = (int*)malloc(ac * sizeof(int));')
+      output.append(f'if({name}==NULL)' + ' {printf("FAILED TO ALLOCATED MEMORY");} else {int i = 0;')
+      if len(args) > 0:
+        c = 0
+        for i in args:
+          c += 1
+          output.append(f'i++;{name}[i] = {i};')
+      output.append('}')
+    elif tp == 'dec':
+      output.append(f'float* {name};')
+      output.append(f'{name} = (float*)malloc(ac * sizeof(float));')
+      output.append(f'if({name}==NULL)' + ' {printf("FAILED TO ALLOCATED MEMORY");} else {int i = 0;')
+      if len(args) > 0:
+        c = 0
+        for i in args:
+          c += 1
+          output.append(f'i++;{name}[i] = {i};')
+      output.append('}')
     args = ['']
   elif args[0] == 'func':
     name = args[1]
