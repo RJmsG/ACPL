@@ -1,4 +1,4 @@
-import acplmod
+import acpllib
 
 print('ACPL A22\'3 compiler UI 0.2 (acpl Beta 1.3.0 Build 2)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
 
@@ -34,7 +34,7 @@ while True:
                     print('Error: Unidintified or more than requiered args detected!')
                     compile = False
         if compile:
-            acplmod.compilef(savefile=sf, execute=exec, file=file, path=p, extra_libs=el, mtype=mt)
+            acpllib.compilef(savefile=sf, execute=exec, file=file, path=p, extra_libs=el, mtype=mt)
     elif i[0] == 'help':
         print('Commands: compile, quit')
     elif i[0] == 'quit':
