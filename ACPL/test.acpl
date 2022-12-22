@@ -1,6 +1,0 @@
-vlen str vla "test"
-sac 5
-str dynamic
-dynamic vla
-outln "result:"
-outvar dynamic

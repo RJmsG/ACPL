@@ -3,9 +3,23 @@ aput = []
 ac = ''
 fncs = []
 ignore = []
-var = []
-tpe = []
+var = ['ac']
+tpe = ['int']
 dt = ['str', 'int', 'dec']
+
+def tproc(inp):
+  if inp == 'str':
+    return '%s'
+  elif inp == 'int':
+    return '%d'
+  elif inp == 'float':
+    return '%f'
+  elif inp == '~str':
+    return '%c'
+  elif inp == '~int':
+    return '%d'
+  elif inp == '~float':
+    return '%f'
 
 def strp(inp):
   a = ''
@@ -16,7 +30,7 @@ def strp(inp):
       a += ')'
     elif i == '!':
       a += '(int)'
-    elif i == '*':
+    elif i == '^':
       a += '(float)'
     else:
       a += i
@@ -148,11 +162,14 @@ def comln(inp):
     output.append(f'{name}({strp(" ".join(args))});')
     args = ['']
   elif args[0] == 'sac':
-    output.append('ac = {args[1]};')
+    output.append(f'ac = {args[1]};')
   elif args[0] in var:
     name = args[0]
     del args[0]
-    output.append(f'{name} = {strp(" ".join(args))}')
+    if tpe[var.index(name)][0] == '~' or tpe[var.index(args[0])][0] == '~':
+      output.append('for(i=0;i<ac;++i) {' + f'{name}[i] = {args[0]}[i];' + '}')
+    else:
+      output.append(f'{name} = {strp(" ".join(args))}')
     args = ['']
   elif args[0] == '#':
     pass
@@ -165,10 +182,12 @@ def comln(inp):
     tpe.append('str')
     output.append(f'char {args[1]}[{args[2]}];')
     output.append(f'scanf("%{args[2]}s", {args[1]});')
-  elif args[0] == 'outs':
-    output.append(f'printf("%s", {args[1]});')
-  elif args[0] == 'outi':
-    output.append(f'printf("%d", {args[1]});')
+  elif args[0] == 'outvar':
+    t = tpe[var.index(args[1])]
+    if t[0] == '~':
+      output.append('for(i=0;i<ac;++i) {printf("' + tproc(t) + '", ' + args[1] + '[i]);}')
+    else:
+      output.append(f'printf("{tproc(t)}", {args[1]});')
   else:
     if not args[0] == '':
       print(f'Error while compiling: "{args[0]}" is not an included variable or function.')
