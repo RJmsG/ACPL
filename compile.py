@@ -37,9 +37,8 @@ def strp(inp):
   return a
 
 def comln(inp):
-  global ac
-  global dt
-  global tpe
+    
+   
   args = inp.split(' ')
   if args[0] == 'vlen':
     tp = args[1]
