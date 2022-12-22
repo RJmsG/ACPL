@@ -17,10 +17,14 @@ def compilef(file, path='', extra_libs=[], mtype='int', libs=lib, savefile=True,
     output.append('#include' + i)
   output.append(f'{mtype} main() '+'{')
   output.append('int ac = 1;')
+  c = 0
   for i in lines:
+    c += 1
     a = []
     for o in range(len(i)):
       if not o > (len(i) - 2):
+        a.append(i[o])
+      elif c == len(lines):
         a.append(i[o])
     i = ''.join(a)
     comln(i)
