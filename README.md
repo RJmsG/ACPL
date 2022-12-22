@@ -8,20 +8,25 @@ ACPL, Ironically, stands for Axe's Complicated Programming Language.
 I was gonna call it ASPL, but the name stuck.
 
 ## More information
-ACPL's latest version is 1.2, it is mainained by Me(RJmsG).
+The ACPL compiler's latest version is 1.3, and it is developed by Me(RJmsG) and ShowierData9978.
+The current version of the language itself is A22'3
 
-### Whats new in 1.2?
-A few small changes have been added:
+### Whats new in A22'3 & the compiler?
+Quite a bit of changes:
 
-1) Embedded GCC
-2) Default option to download the generated C code
+1) Fixed an error involving no newline at the end of files.
+2) Added new Dynamic Arrays and FAV(Flexible Address Variables)!
+3) Rewritten and removed some unnecesary compiler code involving output.
+4) Added ability to import other ACPL and C files.
+5) Added new form of data storage.
 
 ### Goals for ACPL:
 
-1) support for dynamic arrays
-2) full port to the C language
-3) switch to llvm
-4) Support for C & Python based libraries
+1) Full port to the C language
+2) Switch to llvm
+3) Native support for C and Python
+
+A goal has finally been reached! (support for dynamic arrays)
 
 #### I am currently looking for other's help to make ACPL better
 If you can, join the project and spread the word!
