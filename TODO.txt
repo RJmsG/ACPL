@@ -1,0 +1,19 @@
+From axe to showierdata9978: What role do you want exactly?
+
+Things to do:
+
+Implement classes
+Implement variable list items (Var.index).
+Change variable decleration to (type var=data/var)
+Add module import feature
+Add return, break
+Implement for, while, repeat
+Add option for stdio include
+Remove io implementations and create a standard library
+Make better data input parsing function.
+
+Things done:
+
+Dynamic array variables
+Seperate compiler functions
+Removal of global variables
