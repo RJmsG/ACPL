@@ -1,83 +1,38 @@
-output = []
-aput = []
-ac = ''
-fncs = []
-ignore = []
-var = []
-tpe = []
-dt = ['str', 'int', 'dec']
+from compilefunc import *
 
-def strp(inp):
-  a = ''
-  for i in inp:
-    if i == ':':
-      a += '('
-    elif i == ';':
-      a += ')'
-    elif i == '!':
-      a += '(int)'
-    elif i == '*':
-      a += '(float)'
-    else:
-      a += i
-  return a
 
 def comln(inp):
-  global ac
-  global dt
-  global tpe
   args = inp.split(' ')
-  if args[0] in dt:
-    tp = args[0]
-    name = args[1]
-    del args[0]
-    del args[0]
+  ina = args[0]
+  if ina == 'vlen':
+    tp = args[1]
+    name = args[2]
+    clargs(3)
     var.append(name)
     tpe.append(tp)
-    if tp == 'str':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'char {name} = {strp(args[0])};')
-        else:
-          output.append(f'char {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'char {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'char {name}[ac];')
-    elif tp == 'int':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'int {name} = {args[0]};')
-        else:
-          output.append(f'int {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'int {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'int {name}[ac];')
-    elif tp == 'dec':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'float {name} = {args[0]};')
-        else:
-          output.append(f'float {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'float {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'float {name}[ac];')
+    varset(tp, name, args)
     args = ['']
-  elif args[0] == 'func':
+  elif ina in dt:
+    tp = args[0]
     name = args[1]
-    del args[0]
-    del args[0]
+    clargs(2)
+    var.append(name)
+    tpe.append('~' + tp)
+    dynvarset(tp, name, args)
+    args = ['']
+  elif ina == 'func':
+    name = args[1]
+    clargs(2)
     output.insert(0, f'void {name}({" ".join(args)});')
-    aput.append(f'void {name}({" ".join(args)})')
+    endmain()
+    output.append(f'void {name}({" ".join(args)})')
     fncs.append(name)
     args = [args[len(args) - 1]]
-  elif args[0] == ':':
+  elif ina == ':':
     output.append('{')
-  elif args[0] == ';':
+  elif ina == ';':
     output.append('}')
-  elif args[0] == 'on':
+  elif ina == 'on':
     if args[2] == '=':
       if tpe[var.index(args[1])] == 'str':
         output.append(f'if (strcmp({args[1]},{args[3]})==0)')
@@ -89,7 +44,7 @@ def comln(inp):
       output.append(f'if ({args[1]} < {args[3]})')
     elif args[2] == '!':
       output.append(f'if ({args[1]} != {args[3]})')
-  elif args[0] == 'or':
+  elif ina == 'or':
     if args[2] == '=':
       if tpe(var.index(args[1])) == 'str':
         output.append(f'else if (strcmp({args[1]},{args[3]})==0)')
@@ -101,35 +56,42 @@ def comln(inp):
       output.append(f'else if ({args[1]} < {args[3]})')
     elif args[2] == '!':
       output.append(f'else if ({args[1]} != {args[3]})')
-  elif args[0] == '!on':
+  elif ina == '!on':
     output.append('else')
-  elif args[0] in fncs:
+  elif ina in fncs:
     name = args[0]
     del args[0]
     output.append(f'{name}({strp(" ".join(args))});')
     args = ['']
-  elif args[0] == 'sac':
-    output.append('ac = {args[1]};')
-  elif args[0] in var:
+  elif ina == 'sac':
+    output.append(f'ac = {args[1]};')
+  elif ina in var:
     name = args[0]
     del args[0]
-    output.append(f'{name} = {strp(" ".join(args))}')
+    if tpe[var.index(name)][0] == '~' or tpe[var.index(args[0])][0] == '~':
+      output.append('for(i=0;i<ac;++i) {' + f'{name}[i] = {args[0]}[i];' + '}')
+    else:
+      output.append(f'{name} = {strp(" ".join(args))}')
     args = ['']
-  elif args[0] == '#':
+  elif ina == '#':
     pass
-  elif args[0] == 'outln':
+    elif ina=='type':
+      output.insert(0, "struct")
+  elif ina == 'outln':
     del args[0]
     output.append(f'puts({" ".join(args)});')
     args = ['']
-  elif args[0] == 'in':
+  elif ina == 'in':
     var.append(args[1])
     tpe.append('str')
     output.append(f'char {args[1]}[{args[2]}];')
     output.append(f'scanf("%{args[2]}s", {args[1]});')
-  elif args[0] == 'outs':
-    output.append(f'printf("%s", {args[1]});')
-  elif args[0] == 'outi':
-    output.append(f'printf("%d", {args[1]});')
+  elif ina == 'outvar':
+    t = tpe[var.index(args[1])]
+    if t[0] == '~':
+      output.append('for(i=0;i<ac;++i) {printf("' + tproc(t) + '", ' + args[1] + '[i]);}')
+    else:
+      output.append(f'printf("{tproc(t)}", {args[1]});')
   else:
-    if not args[0] == '':
-      print(f'Error while compiling: "{args[0]}" is not an included variable or function.')
+    if not ina in ['',' ']:
+      print(f'Error while compiling: Input "{ina}"" is foreign to the compiler.')
