@@ -1,6 +1,6 @@
 # ![ACPL logo](https://u.cubeupload.com/AXE_IMG3/costume31.png)
 <br>
-ACPL is a new lanugae I've been working on.
+ACPL is a new language I've been working on.
 It's a compiled language that is designed to be fast but also easy to use.
 
 ### What does "ACPL" stand for?
