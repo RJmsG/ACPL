@@ -28,6 +28,8 @@ def comln(inp):
     output.append(f'void {name}({" ".join(args)})')
     fncs.append(name)
     args = [args[len(args) - 1]]
+  elif ina == 'vfunc':
+    fncs.append(args[1])
   elif ina == ':':
     output.append('{')
   elif ina == ';':
@@ -62,7 +64,7 @@ def comln(inp):
     name = args[0]
     del args[0]
     output.append(f'{name}({strp(" ".join(args))});')
-    args = ['']
+    args = []
   elif ina == 'sac':
     output.append(f'ac = {args[1]};')
   elif valid(ina):
@@ -80,31 +82,14 @@ def comln(inp):
     pass
   elif ina=='type':
     output.insert(0, "struct")
-  elif ina == 'outln':
-    del args[0]
-    output.append(f'puts({" ".join(args)});')
-    args = ['']
-  elif ina == 'in':
-    var.append(args[1])
-    tpe.append('str')
-    output.append(f'char {args[1]}[{args[2]}];')
-    output.append(f'scanf("%{args[2]}s", {args[1]});')
-  elif ina == 'outvar':
-    t = tpe[var.index(args[1])]
-    if t[0] == '~':
-      output.append('for(i=0;i<ac;++i) {printf("' + tproc(t) + '", ' + args[1] + '[i]);}')
-    else:
-      output.append(f'printf("{tproc(t)}", {args[1]});')
-  elif ina == "import":
+  elif ina == 'import':
     file = open(args[1]  + ".acpl", "r")
     l = file.readlines()
     for i in l:
       lines.append(i)
     file.close()
-  elif ina == "include":
-    file = open(args[1] + ".c", "r")
-    output.append(file.readline())
-    file.close()
+  elif ina == "cinc":
+    output.insert(0, "#include <" + args[1] + ">")
   else:
     if not ina in ['',' ']:
       print(f'Error while compiling: Input "{ina}"" is foreign to the compiler.')

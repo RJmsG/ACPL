@@ -47,14 +47,14 @@ def strp(inp):
 
 def varset(tp, name, args):
   if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'{tp} {name} = {strp(args[0])};')
-        else:
-          output.append(f'{tp} {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'{tp} {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'{tp} {name}[ac];')
+    if len(args[0]) == 1:
+      output.append(f'{tp} {name} = {strp(args[0])};')
+    else:
+      output.append(f'{tp} {name}[] = {strp(" ".join(args))};')
+  elif len(args) == 0:
+    output.append(f'{tp} {name}[] = {strp(" ".join(args))};')
+  else:
+    output.append(f'{tp} {name}[ac];')
 
 def dynvarset(tp, name, args):
   output.append(f'{tp}* {name} = strdup({args});')
@@ -98,3 +98,17 @@ def vstrp(args):
       return a.split(".")[0] + "[" + a.split(".")[1] + "]"
     else:
       pass
+      
+def linef(args):
+  c=0
+  b = []
+  for i in args:
+    c+=1
+    a=[]
+    for o in range(len(i)):
+      if not o > len(i)-2:
+        a.append(i[o])
+      elif c == len(args):
+        a.append(i[o])
+    b += ''.join(a)
+  return b

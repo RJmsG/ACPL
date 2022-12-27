@@ -3,18 +3,12 @@ import os, subprocess
 from platform import system
 
 files_c, file, cls = [], "", 0 #set to 1 for clear screen
-command = ["gcc", "-std=c17", "-Wall"]
+command = ["gcc", "-std=c17"]
 
-lib = ['<stdio.h>', '<stdlib.h>', '<string.h>']
-
-def compilef(file, path='', extra_libs=[], mtype='int', libs=lib, savefile=True, execute=False): # NOTE: execute is a work-in-progress. It does not work as of now.
-  global output
-  libs += extra_libs
+def compilef(file, path='', mtype='int', savefile=True, execute=False): # NOTE: execute is a work-in-progress. It does not work as of now. 
   print(f'Compiling "{file}.acpl"...')
   f1 = open((file + '.acpl'), 'r')
   lines = f1.readlines()
-  for i in libs:
-    output.append('#include' + i)
   output.append(f'{mtype} main() '+'{')
   output.append('int ac = 1;')
   c = 0

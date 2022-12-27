@@ -1,1 +1,3 @@
-outln "Hello World!"
+import acpio
+vfunc printf
+printf "test"
