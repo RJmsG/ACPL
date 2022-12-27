@@ -1,4 +1,4 @@
-from compilefunc import *
+from compilemod import *
 
 
 def comln(inp):
@@ -65,18 +65,21 @@ def comln(inp):
     args = ['']
   elif ina == 'sac':
     output.append(f'ac = {args[1]};')
-  elif ina in var:
-    name = args[0]
+  elif valid(ina):
     del args[0]
+    output.append(f'{vstrp[ina]} = {vstrp(args)}')
+    args = []
+    """""
     if tpe[var.index(name)][0] == '~' or tpe[var.index(args[0])][0] == '~':
       output.append('for(i=0;i<ac;++i) {' + f'{name}[i] = {args[0]}[i];' + '}')
     else:
       output.append(f'{name} = {strp(" ".join(args))}')
     args = ['']
+    """""
   elif ina == '#':
     pass
-    elif ina=='type':
-      output.insert(0, "struct")
+  elif ina=='type':
+    output.insert(0, "struct")
   elif ina == 'outln':
     del args[0]
     output.append(f'puts({" ".join(args)});')
@@ -92,6 +95,16 @@ def comln(inp):
       output.append('for(i=0;i<ac;++i) {printf("' + tproc(t) + '", ' + args[1] + '[i]);}')
     else:
       output.append(f'printf("{tproc(t)}", {args[1]});')
+  elif ina == "import":
+    file = open(args[1]  + ".acpl", "r")
+    l = file.readlines()
+    for i in l:
+      lines.append(i)
+    file.close()
+  elif ina == "include":
+    file = open(args[1] + ".c", "r")
+    output.append(file.readline())
+    file.close()
   else:
     if not ina in ['',' ']:
       print(f'Error while compiling: Input "{ina}"" is foreign to the compiler.')

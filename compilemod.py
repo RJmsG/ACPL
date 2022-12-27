@@ -1,3 +1,4 @@
+lines = []
 output = []
 end = False
 aput = []
@@ -8,6 +9,8 @@ var = ['ac']
 tpe = ['int']
 dt = ['str', 'int', 'dec']
 args = []
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 def clargs(am):
   for i in range(am):
@@ -54,17 +57,44 @@ def varset(tp, name, args):
         output.append(f'{tp} {name}[ac];')
 
 def dynvarset(tp, name, args):
-  output.append(f'{tp}* {name};')
-  output.append(f'{name} = ({tp}*)malloc(ac * sizeof({tp}));')
-  output.append(f'if({name}==NULL)' + ' {printf("FAILED TO ALLOCATED MEMORY");} else {int i = 0;')
-  if len(args) > 0:
-    c = 0
-    for i in ' '.join(args):
-      c += 1
-      output.append(f'i++;{name}[i] = \'{i}\';')
-  output.append('}')
+  output.append(f'{tp}* {name} = strdup({args});')
 
 def endmain():
   output.append('return 0;')
   output.append('}')
   end = True
+
+def valid(arg):
+  v = arg.split('.')
+  if v[0] in var:
+    return True
+  else:
+    return False
+
+def varf(arg):
+  v = arg.split('.')
+  if len(v) == 2:
+    a = v[1][1]
+    if a in letters:
+      return 'f'
+    elif a in numbers:
+      return 'i'
+    else:
+      return '?'
+  else:
+    return 'v'
+
+def vstrp(args):
+  a = ' '.join(args)
+  if a[0] == '"':
+    return a
+  elif a[0] in letters:
+    return a
+  elif a[0] in numbers:
+    return a
+  elif valid(a):
+    b = varf(a)
+    if b == 'i':
+      return a.split(".")[0] + "[" + a.split(".")[1] + "]"
+    else:
+      pass

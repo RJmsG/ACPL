@@ -3,7 +3,7 @@ From axe to showierdata9978: What role do you want exactly?
 Things to do:
 
 Implement classes
-Implement variable list items (Var.index).
+Implement variable list items (Var.index). DONE!
 Change variable decleration to (type var=data/var)
 Add module import feature
 Add return, break
@@ -14,6 +14,7 @@ Make better data input parsing function.
 
 Things done:
 
+Better dynamic array declaration
 Dynamic array variables
 Seperate compiler functions
 Removal of global variables
