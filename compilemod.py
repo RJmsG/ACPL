@@ -10,7 +10,8 @@ fd=0
 ignore = []
 var = ['ac']
 tpe = ['int']
-dt = ['str', 'int', 'dec']
+dt = ['str', 'int', 'dec', '~str', '~int', '~dec']
+dt2 = ['char', 'int', 'float', 'char', 'int', 'float']
 args = []
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -68,17 +69,14 @@ def strp(inp):
   return a
 
 def varset(tp, name, args):
-  if len(args) == 1:
-    if len(args[0]) == 1:
-      oapp(f'{tp} {name} = {strp(args[0])};')
-    else:
-      oapp(f'{tp} {name}[] = {strp(" ".join(args))};')
-  elif len(args) == 0:
-    oapp(f'{tp} {name}[] = {strp(" ".join(args))};')
+  a = dt2[dt.index(tp)]
+  if len(args) > 0:
+    oapp(f'{a} {name}[] = {strp(" ".join(args))};')
   else:
-    oapp(f'{tp} {name}[ac];')
+    oapp(f'{a} {name}[ac];')
 
 def dynvarset(tp, name, args):
+  a = dt2[dt.index(tp)]
   if len(args) > 0:
     oapp(f'{tp}* {name} = strdup({args});')
   else:

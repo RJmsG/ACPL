@@ -1,10 +1,11 @@
 cinc stdio.h
 vfunc printf
-vfunc getchar
+vfunc scanf
 
 func out char *inp
 printf "%s",inp
 !
 
 func in char *var
+scanf "%s",var
 !

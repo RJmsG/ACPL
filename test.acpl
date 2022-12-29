@@ -1,5 +1,6 @@
 import acpio
 out "test"
-str input
-in &input
+sac 4
+vlen str input
+in input
 out input
