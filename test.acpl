@@ -1,1 +1,5 @@
-outln "Hello World!"
+import acpio
+out "test"
+str input
+in &input
+out input

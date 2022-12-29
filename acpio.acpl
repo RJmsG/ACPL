@@ -1,0 +1,10 @@
+cinc stdio.h
+vfunc printf
+vfunc getchar
+
+func out char *inp
+printf "%s",inp
+!
+
+func in char *var
+!

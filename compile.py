@@ -1,135 +1,103 @@
-output = []
-aput = []
-ac = ''
-fncs = []
-ignore = []
-var = []
-tpe = []
-dt = ['str', 'int', 'dec']
+from compilemod import *
+import compilemod as cmod
 
-def strp(inp):
-  a = ''
-  for i in inp:
-    if i == ':':
-      a += '('
-    elif i == ';':
-      a += ')'
-    elif i == '!':
-      a += '(int)'
-    elif i == '*':
-      a += '(float)'
-    else:
-      a += i
-  return a
 
 def comln(inp):
-  global ac
-  global dt
-  global tpe
   args = inp.split(' ')
-  if args[0] in dt:
-    tp = args[0]
-    name = args[1]
-    del args[0]
-    del args[0]
+  ina = args[0]
+  if ina == 'vlen':
+    tp = args[1]
+    name = args[2]
+    args = clargs(3,args)
     var.append(name)
     tpe.append(tp)
-    if tp == 'str':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'char {name} = {strp(args[0])};')
-        else:
-          output.append(f'char {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'char {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'char {name}[ac];')
-    elif tp == 'int':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'int {name} = {args[0]};')
-        else:
-          output.append(f'int {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'int {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'int {name}[ac];')
-    elif tp == 'dec':
-      if len(args) == 1:
-        if len(args[0]) == 1:
-          output.append(f'float {name} = {args[0]};')
-        else:
-          output.append(f'float {name}[] = {strp(" ".join(args))};')
-      elif len(args) == 0:
-        output.append(f'float {name}[] = {strp(" ".join(args))};')
-      else:
-        output.append(f'float {name}[ac];')
+    varset(tp, name, args)
     args = ['']
-  elif args[0] == 'func':
+  elif ina in dt:
+    tp = args[0]
     name = args[1]
-    del args[0]
-    del args[0]
-    output.insert(0, f'void {name}({" ".join(args)});')
-    aput.append(f'void {name}({" ".join(args)})')
-    fncs.append(name)
+    args=clargs(2,args)
+    var.append(name)
+    tpe.append('~' + tp)
+    dynvarset(tp, name, args)
+    args = ['']
+  elif ina == 'func':
+    fncs.append(args[1])
+    name = args[1]
+    print(args)
+    args=clargs(2,args)
+    print(args)
+    nout(f'void {name}({" ".join(args)}) '+'{')
+    cmod.bg = False
+    cmod.fd += 1
     args = [args[len(args) - 1]]
-  elif args[0] == ':':
-    output.append('{')
-  elif args[0] == ';':
-    output.append('}')
-  elif args[0] == 'on':
+  elif ina == 'vfunc':
+    fncs.append(args[1])
+  elif ina == ':':
+    oapp('{')
+    cmod.fd += 1
+  elif ina == '!':
+    oapp('}')
+    cmod.fd -= 1
+  elif ina == 'on':
     if args[2] == '=':
       if tpe[var.index(args[1])] == 'str':
-        output.append(f'if (strcmp({args[1]},{args[3]})==0)')
+        oapp(f'if (strcmp({args[1]},{args[3]})==0)')
       else:
-        output.append(f'if ({args[1]} == {args[3]})')
+        oapp(f'if ({args[1]} == {args[3]})')
     elif args[2] == '>':
-      output.append(f'if ({args[1]} > {args[3]})')
+      oapp(f'if ({args[1]} > {args[3]})')
     elif args[2] == '<':
-      output.append(f'if ({args[1]} < {args[3]})')
+      oapp(f'if ({args[1]} < {args[3]})')
     elif args[2] == '!':
-      output.append(f'if ({args[1]} != {args[3]})')
-  elif args[0] == 'or':
+      oapp(f'if ({args[1]} != {args[3]})')
+  elif ina == 'or':
     if args[2] == '=':
       if tpe(var.index(args[1])) == 'str':
-        output.append(f'else if (strcmp({args[1]},{args[3]})==0)')
+        oapp(f'else if (strcmp({args[1]},{args[3]})==0)')
       else:
-        output.append(f'else if ({args[1]} == {args[3]})')
+        oapp(f'else if ({args[1]} == {args[3]})')
     elif args[2] == '>':
-      output.append(f'else if ({args[1]} > {args[3]})')
+      oapp(f'else if ({args[1]} > {args[3]})')
     elif args[2] == '<':
-      output.append(f'else if ({args[1]} < {args[3]})')
+      oapp(f'else if ({args[1]} < {args[3]})')
     elif args[2] == '!':
-      output.append(f'else if ({args[1]} != {args[3]})')
-  elif args[0] == '!on':
-    output.append('else')
-  elif args[0] in fncs:
+      oapp(f'else if ({args[1]} != {args[3]})')
+  elif ina == '!on':
+    oapp('else')
+  elif ina in fncs:
     name = args[0]
     del args[0]
-    output.append(f'{name}({strp(" ".join(args))});')
-    args = ['']
-  elif args[0] == 'sac':
-    output.append('ac = {args[1]};')
-  elif args[0] in var:
-    name = args[0]
+    oapp(f'{name}({strp(" ".join(args))});')
+    args = []
+  elif ina == 'sac':
+    oapp(f'ac = {args[1]};')
+  elif valid(ina):
     del args[0]
-    output.append(f'{name} = {strp(" ".join(args))}')
+    oapp(f'{vstrp[ina]} = {vstrp(args)}')
+    args = []
+    """""
+    if tpe[var.index(name)][0] == '~' or tpe[var.index(args[0])][0] == '~':
+      output.append('for(i=0;i<ac;++i) {' + f'{name}[i] = {args[0]}[i];' + '}')
+    else:
+      output.append(f'{name} = {strp(" ".join(args))}')
     args = ['']
-  elif args[0] == '#':
+    """""
+  elif ina == '#':
     pass
-  elif args[0] == 'outln':
-    del args[0]
-    output.append(f'puts({" ".join(args)});')
-    args = ['']
-  elif args[0] == 'in':
-    var.append(args[1])
-    tpe.append('str')
-    output.append(f'char {args[1]}[{args[2]}];')
-    output.append(f'scanf("%{args[2]}s", {args[1]});')
-  elif args[0] == 'outs':
-    output.append(f'printf("%s", {args[1]});')
-  elif args[0] == 'outi':
-    output.append(f'printf("%d", {args[1]});')
+  elif ina=='type':
+    output.insert(0, "struct")
+  elif ina == 'import':
+    file = open(args[1]  + ".acpl", "r")
+    l = file.readlines()
+    print(l)
+    a = linef(l)
+    print(a)
+    for i in a:
+      comln(i)
+    file.close()
+  elif ina == "cinc":
+    nout(f"#include <{args[1][0:len(args[1])]}>")
   else:
-    if not args[0] == '':
-      print(f'Error while compiling: "{args[0]}" is not an included variable or function.')
+    if not ina in ['',' ']:
+      print(f'Error while compiling: Input "{ina}" is foreign to the compiler.')

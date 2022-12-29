@@ -1,0 +1,19 @@
+
+Things to do:
+
+Implement classes
+Implement variable list items (Var.index). DONE!
+Change variable decleration to (type var=data/var)
+Add module import feature DONE!
+Add return, break
+Implement for, while, repeat
+Remove io implementations and create a standard library PARTIALLY DONE.
+Make better data input parsing function.
+
+Things done:
+
+Created a small output library
+Better dynamic array declaration
+Dynamic array variables
+Seperate compiler functions
+Removal of global variables

@@ -1,9 +1,9 @@
 import acpllib
 
-print('ACPL A22\'2 compiler UI 0.1 (acpl 1.2.1)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
+print('ACPL A23 compiler UI 0.2 (pyacpl Beta 1.3.1)\n(For more information, go type \'help\' or go to the GitHub repository at https://github.com/RJmsG/ACPL)')
 
 while True:
-    i = input('ACPL>')
+    i = input('ACPL>').split(' ')
     if i[0] == 'compile':
         file = i[1]
         sf = True
@@ -27,14 +27,11 @@ while True:
                 elif i[0] == '?path':
                     p = i[1]
                     del i[0];del i[0]
-                elif i[0] == '+lib':
-                    el.append(i[1])
-                    del i[0];del i[0]
                 else:
                     print('Error: Unidintified or more than requiered args detected!')
                     compile = False
         if compile:
-            acpllib.compilef(savefile=sf, execute=exec, file=file, path=p, extra_libs=el, mtype=mt)
+            acpllib.compilef(savefile=sf, execute=exec, file=file, path=p, mtype=mt)
     elif i[0] == 'help':
         print('Commands: compile, quit')
     elif i[0] == 'quit':
