@@ -1,5 +1,5 @@
-from compilemod import *
-import compilemod as cmod
+from . import compilemod as cmod
+from .compilemod import *
 
 
 def comln(inp):

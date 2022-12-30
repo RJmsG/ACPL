@@ -1,4 +1,5 @@
-from compile import *
+from . import compile
+from .compile import *
 import os, subprocess
 from platform import system
 
