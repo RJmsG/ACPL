@@ -59,27 +59,30 @@ void compln(char **args) {
 }
 
 //  THIS IS THE MAIN FUNC! (axe has bad eyesight, so he needs a reminder of where everything is :skull:)
-void main(){  
-char** tokens;
+void main( int argcount, char *argvalue[] ) {  
+	char** tokens;
+	char** lines = whole("Test.txt");
+	int index;
+	
+	for(index=0; lines[index]; index++) {
+		 printf("%d %s\n", index, lines[index]);
+	}
 
-char** lines = whole("Test.txt");
-for(int i=0; lines[i]; i++) printf("%d %s\n", i, lines[i]);
-int i;
 
-char *str = strdup(lines[0]);
-printf("months=[%s]\n\n", str);
-tokens = str_split(str, ' ');
-if (tokens)
-{
-for (i = 0; *(tokens + i); i++)
-{
-printf("month=[%s]\n", *(tokens + i));
-free(*(tokens + i));
-}
-printf("\n");
-compln(tokens);
-free(tokens);
-}
-freewhole(lines);
-//  end of main function
-}
+  char *str = strdup(lines[0]);
+
+  printf("months=[%s]\n\n", str);
+  tokens = str_split(str, ' ');
+  if (tokens)
+  {
+     for (index = 0; *(tokens + index); index++) {  
+			 printf("month=[%s]\n", *(tokens + index));
+			 free(*(tokens + index));
+		 }
+		 printf("\n");
+		 compln(tokens);
+		 free(tokens);
+  }
+  freewhole(lines);
+	
+} // End: Main
