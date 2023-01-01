@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
+// same as linking files, but i dont need to link it :)
 #include "whole.h"
+#include "whole.c"
 
 char** str_split(char* a_str, const char a_delim) {
     char** result    = 0;
