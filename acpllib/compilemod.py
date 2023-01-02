@@ -37,7 +37,13 @@ def clargs(am, inp):
   for i in range(am):
     del inp[0]
   return inp
-    
+
+def nver(string):
+  if string[0] in numbers:
+    return True
+  else:
+    return False
+
 def tproc(inp):
   if inp == 'str':
     return '%s'
@@ -55,18 +61,35 @@ def tproc(inp):
 def strp(inp):
   a = ''
   for i in inp:
-    if i == ':':
-      a += '('
-    elif i == ';':
-      a += ')'
-    elif i == '!':
-      a += '(int)'
-    elif i == '^':
-      a += '(float)'
-    else:
-      if not i == '\n':
-        a += i
+    if not i == '\n':
+      a += i
   return a
+
+def bstrp(args):
+  a = ''
+  last = ['']
+  c=0
+  for i in args:
+    c+=1
+    if i == 'len':
+      if last[0] == '.':
+        a += f'strlen({last[1]}) '
+    elif i == 'addr':
+      if last[0] == '.':
+        a += f'&{last[1]} '
+    elif nver(i):
+      if last[0] == ':':
+        a += f'{last[1]}[{i}] '
+    elif last[0] in fncs:
+      if last[1] == '.':
+        a += f' = {last[1]}{last[0]} '
+    elif args(c+1) not in ['.',':']:
+      a += i
+    elif c<=len(args):
+      a += i
+    else:
+      a += i
+    last.instert(0,i)
 
 def varset(tp, name, args):
   a = dt2[dt.index(tp)]

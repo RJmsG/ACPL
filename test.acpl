@@ -1,6 +1,1 @@
-import acpio
-out "test"
-sac 4
-vlen str input
-in input
-out input
+str funny

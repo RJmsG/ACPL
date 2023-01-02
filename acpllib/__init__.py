@@ -1,5 +1,5 @@
-from . import compile
-from .compile import *
+from . import compiletest
+from .compiletest import *
 import os, subprocess
 from platform import system
 
